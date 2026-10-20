@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.FbArchive" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#C8A24B</item>
+        <item name="colorPrimaryVariant">#8A7136</item>
+        <item name="colorOnPrimary">#171614</item>
+        <item name="android:statusBarColor">#171614</item>
+        <item name="android:navigationBarColor">#171614</item>
+        <item name="android:windowBackground">#171614</item>
+    </style>
+</resources>
