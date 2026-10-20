@@ -1,0 +1,44 @@
+# Builds an installable, debug-signed release APK on every push to main and on
+# any manual trigger. Runs entirely on GitHub-hosted infrastructure -- no
+# Android SDK or Gradle install required locally.
+#
+# When the run finishes, the APK is downloadable from the run's Summary page as
+# an artifact named 'fb-archive-apk'.
+name: Build APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Generate Gradle wrapper
+        # The delivered project intentionally omits gradle-wrapper.jar (binary).
+        # `gradle wrapper` from the runner's Gradle installation creates it.
+        run: gradle wrapper --gradle-version 8.9
+
+      - name: Build release APK
+        run: ./gradlew assembleRelease --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: fb-archive-apk
+          path: app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
